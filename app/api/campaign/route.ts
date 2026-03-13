@@ -1,26 +1,10 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
-import { Queue } from "bullmq"
-
-
-/*
-Create Redis connection
-*/
-
-
-
-/*
-Create queue that triggers the AI pipeline
-*/
-
-const scriptQueue = new Queue("scriptQueue", {
-  connection: { host: (process.env.REDIS_URL || "127.0.0.1").replace("redis://", "").split(":")[0], port: 6379 }
-})
+import { scriptQueue } from "@/lib/queues"
 
 /*
 Create Supabase client
 */
-
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -30,28 +14,21 @@ const supabase = createClient(
 POST /api/campaign
 Launch a new campaign
 */
-
 export async function POST(req: Request) {
-
   try {
-
     const body = await req.json()
-
     const { product, videos } = body
 
     if (!product) {
-
       return NextResponse.json(
         { error: "Product URL required" },
         { status: 400 }
       )
-
     }
 
     /*
     Insert campaign into database
     */
-
     const { data, error } = await supabase
       .from("campaigns")
       .insert({
@@ -63,18 +40,15 @@ export async function POST(req: Request) {
       .single()
 
     if (error) {
-
       return NextResponse.json(
         { error: error.message },
         { status: 500 }
       )
-
     }
 
     /*
     Start AI content pipeline
     */
-
     await scriptQueue.add("generateScripts", {
       campaignId: data.id,
       product,
@@ -87,14 +61,10 @@ export async function POST(req: Request) {
     })
 
   } catch (err) {
-
     console.error(err)
-
     return NextResponse.json(
       { error: "Campaign launch failed" },
       { status: 500 }
     )
-
   }
-
 }
