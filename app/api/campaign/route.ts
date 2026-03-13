@@ -1,29 +1,100 @@
 import { NextResponse } from "next/server"
+import { createClient } from "@supabase/supabase-js"
 import { Queue } from "bullmq"
-import IORedis from "ioredis"
+import Redis from "ioredis"
 
-const connection = new IORedis(process.env.REDIS_URL!)
+/*
+Create Redis connection
+*/
 
-const queue = new Queue("script-generation",{
-  connection
+const redis = new Redis(process.env.REDIS_URL || "redis://127.0.0.1:6379")
+
+/*
+Create queue that triggers the AI pipeline
+*/
+
+const scriptQueue = new Queue("scriptQueue", {
+  connection: redis
 })
 
-export async function POST(req:Request){
+/*
+Create Supabase client
+*/
 
-  const body = await req.json()
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
 
-  const { product, videos } = body
+/*
+POST /api/campaign
+Launch a new campaign
+*/
 
-  for(let i=0;i<videos;i++){
+export async function POST(req: Request) {
 
-    await queue.add("generate-script",{
-      product
+  try {
+
+    const body = await req.json()
+
+    const { product, videos } = body
+
+    if (!product) {
+
+      return NextResponse.json(
+        { error: "Product URL required" },
+        { status: 400 }
+      )
+
+    }
+
+    /*
+    Insert campaign into database
+    */
+
+    const { data, error } = await supabase
+      .from("campaigns")
+      .insert({
+        product,
+        videos,
+        status: "running"
+      })
+      .select()
+      .single()
+
+    if (error) {
+
+      return NextResponse.json(
+        { error: error.message },
+        { status: 500 }
+      )
+
+    }
+
+    /*
+    Start AI content pipeline
+    */
+
+    await scriptQueue.add("generateScripts", {
+      campaignId: data.id,
+      product,
+      videos
     })
 
-  }
+    return NextResponse.json({
+      success: true,
+      campaign: data
+    })
 
-  return NextResponse.json({
-    status:"campaign_started"
-  })
+  } catch (err) {
+
+    console.error(err)
+
+    return NextResponse.json(
+      { error: "Campaign launch failed" },
+      { status: 500 }
+    )
+
+  }
 
 }
