@@ -19,7 +19,9 @@ export default function PipelineMonitor(){
       const res = await fetch("/api/workers/status")
       const data = await res.json()
 
-      setStatus(data)
+      const workerMap = {}
+      data.workers?.forEach(w => { workerMap[w.name] = w.active })
+      setStatus({ script: workerMap["scriptWorker"] ?? false, image: workerMap["imageWorker"] ?? false, video: workerMap["videoWorker"] ?? false, publish: workerMap["publishWorker"] ?? false, strategy: workerMap["strategyWorker"] ?? false })
 
     }catch(err){
 

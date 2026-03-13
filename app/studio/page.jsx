@@ -29,13 +29,7 @@ export default function StudioPage() {
 
   async function approvePost(id) {
 
-    await fetch("/api/post/approve", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ id })
-    })
+    await supabase.from("posts").update({ status: "approved" }).eq("id", id)
 
     loadContent()
   }

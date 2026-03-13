@@ -11,7 +11,7 @@ export default function AgentGenerator(){
 
     setLoading(true)
 
-    await fetch("/api/agent/generate",{
+    await fetch("/api/generate",{
       method:"POST",
       headers:{
         "Content-Type":"application/json"

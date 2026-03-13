@@ -1,20 +1,20 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
 import { Queue } from "bullmq"
-import Redis from "ioredis"
+
 
 /*
 Create Redis connection
 */
 
-const redis = new Redis(process.env.REDIS_URL || "redis://127.0.0.1:6379")
+
 
 /*
 Create queue that triggers the AI pipeline
 */
 
 const scriptQueue = new Queue("scriptQueue", {
-  connection: redis
+  connection: { host: (process.env.REDIS_URL || "127.0.0.1").replace("redis://", "").split(":")[0], port: 6379 }
 })
 
 /*

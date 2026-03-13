@@ -1,8 +1,8 @@
 export default function ViralFeed(){
 
     const posts = [
-      {hook:"Nobody talks about this collagen trick",views:120k},
-      {hook:"My skin changed after 7 days",views:85k}
+      {hook:"Nobody talks about this collagen trick",views:"120k"},
+      {hook:"My skin changed after 7 days",views:"85k"}
     ]
   
     return(
