@@ -1,0 +1,47 @@
+Retrieving project…
+Deploying shikhapatel1507s-projects/dexfluence-dashboard
+Uploading [--------------------] (0.0B/79B)
+Uploading [====================] (79.0B/79B)
+Inspect: https://vercel.com/shikhapatel1507s-projects/dexfluence-dashboard/3xganwtnvBpBY64SkDKvaMDK2H94 [2s]
+Production: https://dexfluence-dashboard-28nxt4xp0-shikhapatel1507s-projects.vercel.app [2s]
+https://dexfluence-dashboard-28nxt4xp0-shikhapatel1507s-projects.vercel.appBuilding...
+Building...
+Building: Running build in Washington, D.C., USA (East) – iad1
+Building: Build machine configuration: 2 cores, 8 GB
+Building: Retrieving list of deployment files...
+Building: Skipping build cache, deployment was triggered without cache.
+Building: Downloading 80 deployment files...
+Building: Running "vercel build"
+Building: Vercel CLI 50.32.4
+Building: Installing dependencies...
+Building: added 513 packages in 15s
+Building: 154 packages are looking for funding
+Building: run `npm fund` for details
+Building: Detected Next.js version: 15.3.8
+Building: Running "npm run build"
+Building: > dexfluence-dashboard@0.1.0 build
+Building: > next build
+Building: Attention: Next.js now collects completely anonymous telemetry regarding usage.
+Building: This information is used to shape Next.js' roadmap and prioritize features.
+Building: You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+Building: https://nextjs.org/telemetry
+Building: ▲ Next.js 15.3.8
+Building: Creating an optimized production build ...
+Building: ✓ Compiled successfully in 10.0s
+Building: Skipping linting
+Building: Checking validity of types ...
+Building: Collecting page data ...
+Building: Error: supabaseKey is required.
+Building: at new rm (.next/server/chunks/722.js:37:47551)
+Building: at rw (.next/server/chunks/722.js:37:51183)
+Building: at 55217 (.next/server/app/api/agent/route.js:1:717)
+Building: at t (.next/server/webpack-runtime.js:1:143)
+Building: at r (.next/server/app/api/agent/route.js:1:1644)
+Building: at <unknown> (.next/server/app/api/agent/route.js:1:1679)
+Building: at t.X (.next/server/webpack-runtime.js:1:1462)
+Building: at <unknown> (.next/server/app/api/agent/route.js:1:1657)
+Building: at Object.<anonymous> (.next/server/app/api/agent/route.js:1:1707)
+Building: > Build error occurred
+Building: [Error: Failed to collect page data for /api/agent] { type: 'Error' }
+Building: Error: Command "npm run build" exited with 1
+Error: Command "npm run build" exited with 1
