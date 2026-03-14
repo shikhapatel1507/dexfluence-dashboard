@@ -1,6 +1,6 @@
 "use client"
 
-import Sidebar from "@/components/dashboard/sidebar"
+import Sidebar from "@/components/layout/sidebar"
 import Metrics from "@/components/dashboard/metrics"
 import PipelineMonitor from "@/components/dashboard/pipeline-monitor"
 import StrategyPanel from "@/components/dashboard/strategy-panel"
@@ -13,6 +13,11 @@ import LiveFeed from "@/components/dashboard/live-feed"
 import FactoryMap from "@/components/dashboard/factory-map"
 import WorkerLogs from "@/components/dashboard/worker-logs"
 import PostsTable from "@/components/dashboard/posts-table"
+import AIFactory from "@/components/ai-factory"
+import ViralRadar from "@/components/viral-radar"
+import AIFactory3D from "@/components/ai-factory-3d"
+import FactoryMonitor from "@/components/factory-monitor"
+import Pipeline from "@/components/dashboard/pipeline"
 export default function Dashboard(){
 
   return(
@@ -40,6 +45,11 @@ export default function Dashboard(){
         <FactoryMap/>
         <WorkerLogs/>
         <PostsTable/>
+        <AIFactory />
+        <ViralRadar />
+        <AIFactory3D />
+        <FactoryMonitor />
+        <Pipeline />
 
         {/* Pipeline Monitor */}
 

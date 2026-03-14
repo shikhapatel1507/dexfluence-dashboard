@@ -1,87 +1,101 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import Sidebar from "@/components/layout/sidebar"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
-export default function Campaign(){
+export default function CampaignsPage() {
 
-  const [product,setProduct] = useState("")
-  const [videos,setVideos] = useState(20)
-  const [style,setStyle] = useState("ugc")
-  const [loading,setLoading] = useState(false)
+  const [campaigns,setCampaigns] = useState([])
 
-  async function launchCampaign(){
+  useEffect(()=>{
 
-    setLoading(true)
+    const load = async () => {
 
-    const res = await fetch("/api/campaign",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify({
-        product,
-        videos,
-        style
-      })
-    })
+      const res = await fetch("/api/campaign/list")
+      const data = await res.json()
 
-    const data = await res.json()
+      setCampaigns(data)
 
-    console.log(data)
+    }
 
-    setLoading(false)
+    load()
 
-    alert("Campaign launched 🚀")
+  },[])
 
-  }
+  return (
 
-  return(
+    <div className="flex min-h-screen bg-zinc-950 text-white">
 
-    <div className="p-10 max-w-xl mx-auto">
+      <Sidebar/>
 
-      <h1 className="text-2xl font-bold mb-6">
-        Launch Campaign
-      </h1>
+      <main className="flex-1 p-10">
 
-      <div className="space-y-4">
+        <h1 className="text-3xl font-bold mb-10">
+          Campaigns
+        </h1>
 
-        <input
-          placeholder="Product URL"
-          value={product}
-          onChange={e=>setProduct(e.target.value)}
-          className="w-full border p-3 rounded"
-        />
+        <Card className="bg-zinc-900 border-zinc-800">
 
-        <input
-          type="number"
-          value={videos}
-          onChange={e=>setVideos(e.target.value)}
-          className="w-full border p-3 rounded"
-        />
+          <CardHeader>
+            <CardTitle>Active Campaigns</CardTitle>
+          </CardHeader>
 
-        <select
-          value={style}
-          onChange={e=>setStyle(e.target.value)}
-          className="w-full border p-3 rounded"
-        >
+          <CardContent>
 
-          <option value="ugc">UGC Style</option>
-          <option value="studio">Studio Ad</option>
-          <option value="viral">Viral Hook</option>
+            <table className="w-full text-left">
 
-        </select>
+              <thead className="text-zinc-400">
 
-        <button
-          onClick={launchCampaign}
-          className="w-full bg-black text-white p-3 rounded"
-        >
-          {loading ? "Launching..." : "Launch AI Campaign"}
-        </button>
+                <tr>
+                  <th className="p-3">Campaign</th>
+                  <th className="p-3">Platform</th>
+                  <th className="p-3">Status</th>
+                  <th className="p-3">Videos</th>
+                  <th className="p-3">Views</th>
+                </tr>
 
-      </div>
+              </thead>
+
+              <tbody>
+
+                {campaigns.map((campaign,i)=>(
+                  <tr key={i} className="border-t border-zinc-800">
+
+                    <td className="p-3">
+                      {campaign.topic}
+                    </td>
+
+                    <td className="p-3">
+                      {campaign.platform}
+                    </td>
+
+                    <td className="p-3">
+                      {campaign.status}
+                    </td>
+
+                    <td className="p-3">
+                      {campaign.videos}
+                    </td>
+
+                    <td className="p-3">
+                      {campaign.views}
+                    </td>
+
+                  </tr>
+                ))}
+
+              </tbody>
+
+            </table>
+
+          </CardContent>
+
+        </Card>
+
+      </main>
 
     </div>
 
   )
-
 }

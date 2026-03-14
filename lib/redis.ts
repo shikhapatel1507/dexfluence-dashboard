@@ -1,19 +1,14 @@
-import IORedis from "ioredis"
+import Redis from "ioredis"
 
-if (!process.env.REDIS_URL) {
-  throw new Error("Missing environment variable: REDIS_URL")
+const globalForRedis = global as typeof global & { redis?: Redis }
+
+if (!globalForRedis.redis) {
+  globalForRedis.redis = new Redis({
+    host: "127.0.0.1",
+    port: 6379,
+    maxRetriesPerRequest: null,
+    retryStrategy: () => null,
+  })
 }
 
-export const redis = new IORedis(process.env.REDIS_URL, {
-  maxRetriesPerRequest: 3,
-  lazyConnect: true,
-  enableReadyCheck: true,
-})
-
-redis.on("error", (err) => {
-  console.error("[Redis] Connection error:", err)
-})
-
-redis.on("connect", () => {
-  console.log("[Redis] Connected successfully")
-})
+export const redis = globalForRedis.redis

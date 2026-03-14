@@ -1,51 +1,58 @@
 "use client"
 
-export default function FactoryMap(){
+import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
 
-  const steps = [
-    "Script",
-    "Image",
-    "Video",
-    "Approve",
-    "Publish",
-    "Viral",
-    "Swarm"
-  ]
+const stages = [
+  "Hooks",
+  "Scripts",
+  "Images",
+  "Videos",
+  "Approval",
+  "Publishing",
+  "Swarm"
+]
 
-  return(
+export default function FactoryMap() {
 
-    <div className="bg-white p-6 rounded-xl shadow mb-6">
+  const [step, setStep] = useState(0)
 
-      <h2 className="font-bold mb-6">
-        AI Content Factory
+  useEffect(() => {
+
+    const interval = setInterval(() => {
+      setStep((prev) => (prev + 1) % stages.length)
+    }, 2000)
+
+    return () => clearInterval(interval)
+
+  }, [])
+
+  return (
+    <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 mb-10">
+
+      <h2 className="text-xl font-semibold mb-8">
+        Live AI Factory
       </h2>
 
-      <div className="flex items-center justify-between">
+      <div className="flex justify-between items-center">
 
-        {steps.map((step,index)=>(
-          
-          <div
-            key={index}
-            className="flex flex-col items-center flex-1"
-          >
+        {stages.map((stage, i) => (
 
-            {/* Circle */}
+          <div key={i} className="flex flex-col items-center">
 
-            <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm font-bold">
-              {index+1}
-            </div>
+            <motion.div
+              animate={{
+                backgroundColor:
+                  i === step ? "#7c3aed" : "#27272a"
+              }}
+              className="w-16 h-16 rounded-full flex items-center justify-center text-sm font-semibold"
+            >
+              {i + 1}
+            </motion.div>
 
-            {/* Label */}
-
-            <p className="text-xs mt-2 text-gray-600 text-center">
-              {step}
+            <p className="mt-3 text-xs text-zinc-400">
+              {stage}
             </p>
-
-            {/* Connector */}
-
-            {index !== steps.length-1 && (
-              <div className="w-full h-1 bg-gray-200 mt-4"></div>
-            )}
 
           </div>
 
@@ -54,7 +61,5 @@ export default function FactoryMap(){
       </div>
 
     </div>
-
   )
-
 }

@@ -36,7 +36,7 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts",
     "lib/supabaseClient.js"
-  ],
+, "app/api/generate/route.js"  ],
   "exclude": [
     "node_modules"
   ]

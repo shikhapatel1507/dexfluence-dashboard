@@ -1,170 +1,89 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { supabase } from "@/lib/supabaseClient"
+import Sidebar from "@/components/layout/sidebar"
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer
+} from "recharts"
 
-export default function AnalyticsPage(){
+const data = [
+  { day: "Mon", views: 2000 },
+  { day: "Tue", views: 4500 },
+  { day: "Wed", views: 7000 },
+  { day: "Thu", views: 9000 },
+  { day: "Fri", views: 12000 },
+  { day: "Sat", views: 18000 },
+  { day: "Sun", views: 26000 }
+]
 
-const [posts,setPosts] = useState([])
+export default function AnalyticsPage() {
 
-const [stats,setStats] = useState({
-views:0,
-likes:0,
-comments:0,
-posts:0
-})
+  return (
+    <div className="flex min-h-screen bg-zinc-950 text-white">
 
-async function loadAnalytics(){
+      <Sidebar/>
 
-const { data } = await supabase
-.from("posts")
-.select("*")
+      <main className="flex-1 p-10">
 
-setPosts(data || [])
+        <h1 className="text-3xl font-bold mb-10">
+          Analytics
+        </h1>
 
-let totalViews = 0
-let totalLikes = 0
-let totalComments = 0
+        {/* Chart */}
 
-data?.forEach(p=>{
+        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 mb-10">
 
-totalViews += p.views || 0
-totalLikes += p.likes || 0
-totalComments += p.comments || 0
+          <h2 className="text-xl font-semibold mb-6">
+            Views Growth
+          </h2>
 
-})
+          <ResponsiveContainer width="100%" height={300}>
 
-setStats({
-views: totalViews,
-likes: totalLikes,
-comments: totalComments,
-posts: data?.length || 0
-})
+            <LineChart data={data}>
 
-}
+              <XAxis dataKey="day"/>
+              <YAxis/>
+              <Tooltip/>
 
-useEffect(()=>{
+              <Line
+                type="monotone"
+                dataKey="views"
+                stroke="#a855f7"
+                strokeWidth={3}
+              />
 
-loadAnalytics()
+            </LineChart>
 
-},[])
+          </ResponsiveContainer>
 
-return(
+        </div>
 
-<div className="p-10">
 
-<h1 className="text-3xl font-bold mb-8">
-Analytics Dashboard
-</h1>
+        {/* Top Posts */}
 
-{/* Metrics */}
+        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8">
 
-<div className="grid grid-cols-4 gap-6 mb-10">
+          <h2 className="text-xl font-semibold mb-6">
+            Top Performing Videos
+          </h2>
 
-<div className="border rounded-lg p-6">
+          <div className="space-y-3 text-zinc-400">
 
-<p className="text-gray-500 text-sm">
-Total Posts
-</p>
+            <p>AI Marketing Hack — 120k views</p>
+            <p>Shopify Growth Trick — 95k views</p>
+            <p>Content Strategy Tip — 88k views</p>
+            <p>Instagram Algorithm Secret — 75k views</p>
 
-<h2 className="text-2xl font-bold">
-{stats.posts}
-</h2>
+          </div>
 
-</div>
+        </div>
 
-<div className="border rounded-lg p-6">
+      </main>
 
-<p className="text-gray-500 text-sm">
-Total Views
-</p>
-
-<h2 className="text-2xl font-bold">
-{stats.views}
-</h2>
-
-</div>
-
-<div className="border rounded-lg p-6">
-
-<p className="text-gray-500 text-sm">
-Total Likes
-</p>
-
-<h2 className="text-2xl font-bold">
-{stats.likes}
-</h2>
-
-</div>
-
-<div className="border rounded-lg p-6">
-
-<p className="text-gray-500 text-sm">
-Total Comments
-</p>
-
-<h2 className="text-2xl font-bold">
-{stats.comments}
-</h2>
-
-</div>
-
-</div>
-
-{/* Top Content */}
-
-<h2 className="text-xl font-semibold mb-4">
-Top Performing Posts
-</h2>
-
-<div className="space-y-4">
-
-{posts
-.sort((a,b)=>b.viral_score-a.viral_score)
-.slice(0,5)
-.map((post)=>(
-<div
-key={post.id}
-className="border rounded-lg p-6 flex justify-between"
->
-
-<div>
-
-<p className="text-sm text-gray-600">
-{post.platform}
-</p>
-
-<a
-href={post.post_url}
-target="_blank"
-className="text-blue-500"
->
-
-View Post
-
-</a>
-
-</div>
-
-<div className="text-sm">
-
-<p>Views: {post.views}</p>
-<p>Likes: {post.likes}</p>
-<p>Comments: {post.comments}</p>
-
-<p className="text-green-600">
-Viral Score: {post.viral_score}
-</p>
-
-</div>
-
-</div>
-))}
-
-</div>
-
-</div>
-
-)
-
+    </div>
+  )
 }
