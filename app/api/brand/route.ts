@@ -1,24 +1,18 @@
+// app/api/brands/route.ts
 import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
 
-export async function POST(req: Request) {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+)
 
-  const body = await req.json()
-  const { website, instagram, voice } = body
-
+export async function GET() {
   const { data, error } = await supabase
     .from("brands")
-    .insert({ website, instagram, voice })
-    .select()
-    .single()
+    .select("id,name,slug,active,posts_per_day,last_posted_at,next_post_at,ig_handle,ig_username,ig_avatar,ig_followers,total_posts,niche,description")
+    .order("created_at", { ascending: false })
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
-  }
-
-  return NextResponse.json(data)
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  return NextResponse.json({ brands: data || [] })
 }
